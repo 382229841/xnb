@@ -1,0 +1,232 @@
+<style>
+    .main-btn-red3 button{
+        background-color:#f75757;
+        border:1px solide #f75757;
+        
+    }
+
+</style>
+<div ng-controller="orderDetailController">
+    <!-- Navbars -->
+    <div class="navbar navbar-app nav-main">
+        <div class="navbar-brand navbar-brand-center">
+            订单详情
+        </div>
+        <div class="btn-group pull-left" ng-click="back()">
+            <div class="btn btn-navbar sidebar-toggle">
+                <div class="btn-to-back">
+                </div>
+            </div>
+        </div>
+        <div class="btn-group pull-right" ng-if="order.status<2" ng-click="cancelOrder(order.orderId)">
+            <div class="btn btn-navbar" style="color:#ffffff;">
+                取消       
+            </div>
+        </div>
+        <div class="btn-group pull-right" ng-if="order.status==2" ng-click="drawbackOrder(order.orderId)">
+            <div class="btn btn-navbar" style="color:#ffffff;">
+                退款       
+            </div>
+        </div>
+        <div class="btn-group pull-right" ng-if="order.status>2" ng-click="deleteOrder(order.orderId)">
+            <div class="btn btn-navbar" style="color:#ffffff;">
+                删除
+            </div>
+        </div>
+         
+    </div>
+    <div class="scrollable">
+        <div class="scrollable-content background-gray">
+            <div class="nav-main-block">
+            </div>
+
+
+            <div ng-if="order != null && order != false">
+                <div class="list-head normal-font" style="background:#ffffff;text-align:center;color:{{(order.status==1 || order.status==2)?'red':''}}">
+                    <div>{{getOrderStatus(order.status,order.category)}}</div> 
+                </div>
+                <div class="list-head normal-font" style="background:#ffffff;text-align:left;" ng-if="order.status==5">
+                    <div>退款已受理，将在5个工作日内与您联系完成退款</div>
+                </div>
+                <div class="pay-area padding-top-0 order-detail-area" ng-if="order.area==2">
+                    <div>
+                        <div class="list-head">
+                            快递查询
+                        </div>
+                        <div class="list-group">
+                            <div class="list-group-item media product-item">
+                                请微信咨询客服，获取快递单号查询。
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+				
+				<div class="pay-area padding-top-0 order-detail-area" ng-if="order.pickupWay==1" style="margin-top:10px;">
+                    <div>
+                        <div class="list-head">
+                            取货信息
+                        </div>
+                        <div class="list-group">
+                            <div class="list-group-item media product-item">
+                                <label>
+                                    时间：</label>
+                                {{order.pickupTime}}
+                            </div>
+                            <a class="list-group-item media product-item" href="tel:{{order.phone}}">
+                                <label>
+                                    电话：</label>
+                                {{order.phone}}
+                                <!--<div class="btn-tel">
+                                </div>-->
+                            </a>
+                            <div class="list-group-item media product-item">
+                                <label>
+                                    地址：</label>
+                                {{order.pickupAddress}}<br />
+                                <div class="myPhone-item-text">
+                                   <button ng-click="showLarge(order.airportMap)" class="btn">查看机场领货地点标示图</button>
+                                </div>
+                                <!--<img src="{{order.airportMap}}" class="img-airport" ng-click="showLarge(order.airportMap)" style="display:none;min-height:50px;"/>
+                                  -->
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+				
+				<div class="pay-area padding-top-0 order-detail-area" ng-if="order.pickupWay==2" style="margin-top:10px;">
+                    <div>
+                        <div class="list-head">
+                            取货信息
+                        </div>
+                        <div class="list-group">
+                            <div class="list-group-item media product-item">
+                                <label>
+                                    时间：</label>
+                                {{order.pickupTime}}
+                            </div>
+                            <a class="list-group-item media product-item" href="tel:{{order.phone}}">
+                                <label>
+                                    电话：</label>
+                                {{order.phone}}
+                                <!--<div class="btn-tel">
+                                </div>-->
+                            </a>
+                            <div class="list-group-item media product-item">
+                                <label>
+                                    地址：</label>
+                                {{order.hotelName}}
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+
+				<div class="pay-area order-detail-area" ng-if="order.pickupWay==1">
+                    <div>
+                        <div class="list-head">
+                            联系信息
+                        </div>
+                        <div class="list-group consignee-detail">
+                            <div class="list-group-item media product-item">
+                                <label>
+                                   联系人：</label>
+                                {{order.contact}}&nbsp;{{order.mobile}}
+                            </div>
+                            <div class="list-group-item media product-item">
+                                <label>
+                                    回程：</label>
+                                <div class="return-info">
+                                    {{order.returnDate}}&nbsp;{{order.returnFlightno}}<br />
+                                    {{order.returnTime}}&nbsp;{{order.returnAirport}}</div>
+                            </div>
+                            <div class="list-group-item media product-item" ng-if="order.comments">
+                                <label>
+                                    备注：</label>
+                                {{order.comments}}<br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				
+				
+                <div class="pay-area order-detail-area" ng-if="order.pickupWay==2">
+                    <div>
+                        <div class="list-head">
+                            取货信息
+                        </div>
+                        <div class="list-group">
+                            <div class="list-group-item media product-item">
+                                <label>
+                                    联系人：</label>
+                                {{order.contact}} &nbsp;&nbsp;&nbsp; {{order.mobile}}
+                            </div>
+                            
+                            <div class="list-group-item media product-item">
+                                <label>
+                                    酒店：</label>
+                                {{order.hotelName}}<br />
+                            </div>
+                            <div class="list-group-item media product-item" ng-if="order.comments">
+                                <label>
+                                    备注：</label>
+                                {{order.comments}}<br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                             
+                
+                <div class="pay-area">
+                    <div class="list-head">
+                        商品信息
+                    </div>
+                    <div class="list-group">
+                        <div class="list-group-item media border-bottom-0 product-item" ng-repeat="product in order.goodsList">
+                            <div class="product-body">
+                                <div class="pull-left">
+                                    <img alt="" src="{{product.img}}" class="product-image" />
+                                </div>
+                                <div class="media-body product-instruction product-detail order-product-detail">
+                                    <div class="product-name">
+                                        {{product.name}}
+                                    </div>
+                                    <div class="product-instruction-bottom">
+                                        <div class="order-num">
+                                            {{product.buyPrice| currency:'￥'}}<br />
+                                            <span class="product-num">×{{product.quantity}}</span>
+                                        </div>
+                                        <div class="subtotal-right">
+                                            {{product.buyPrice * product.quantity | currency:'￥'}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-detail-total"><!--totalAmount-->
+                        共<span>{{totalNum}}</span>件商品 实付<span class="order-amount-total">{{order.discountPrice | currency:'￥'}}</span>
+                    </div>
+                </div>
+                
+                <div class="pay-area" style="margin-bottom:5px;">
+                    <div class="list-head">
+                        订单信息
+                    </div>
+                    
+                    <div class="list-head normal-font" style="padding-bottom:20px;border-top:0px;">
+                        <div>订单编号：{{order.orderNum}}</div>
+                        <div ng-if="order.status==1 || order.status==2">下单时间：{{order.entrydate}}</div>
+                        <div ng-if="order.status==3">确认时间：{{order.operateTime}}</div>
+                        <div ng-if="order.status==4 || order.status==5">取消时间：{{order.operateTime}}</div>
+                    </div>
+                </div>
+                
+                <div class="main-btn main-btn-90 main-btn-red main-btn-red3" ng-if="order.status==1">
+					<button class="btn" ng-click="pay(order.orderNum,order.discountPrice,order.goodsNum,order.orderId)">付款</button>
+				</div>
+                <div class="main-btn main-btn-90 main-btn-red main-btn-red3" ng-if="order.status==2">
+					<button class="btn" ng-click="takeOverOrder(order.orderId)">确认收货</button>
+				</div>
+             
+            </div>
+        </div>
+    </div>
+</div>

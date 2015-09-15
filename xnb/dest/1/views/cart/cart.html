@@ -1,0 +1,155 @@
+<style>
+	.navbar-app .btn.btn-edit{
+		border:0;
+	}
+	.app-body .btn.btn-go {
+		border: 1px solid #F75757;
+		background-color: #F75757;
+	}
+	.app-body .btn.btn-go {
+		font-size: 1.2em;
+	    bottom: -1em;
+	}
+	.checkbox.checkboxTotal {
+		width: 1.5em;
+		height: 1.5em;
+	}
+	.fa-trash:before {
+	  content: "\f1f8";
+	}
+
+</style>
+<div ng-controller="cartController">
+    <!-- Navbars -->
+    <div class="navbar navbar-app nav-main" ng-controller="navbarController">
+        <div class="navbar-brand navbar-brand-center">
+            购物袋
+        </div>
+        <div class="btn-group pull-left" ng-click="back()">
+            <div class="btn btn-navbar sidebar-toggle">
+                <div class="btn-to-back">
+                </div>
+            </div>
+        </div>
+        <div class="pull-right" ng-show="(products && products.length > 0) || (productsTW && productsTW.length > 0)">
+            <div class="btn btn-edit" ng-click="edit()" ng-hide="editMode == true">
+                编辑
+            </div>
+            <div class="btn btn-edit" ng-click="done()" ng-show="editMode == true">
+                完成
+            </div>
+        </div>
+    </div>
+    <div class="scrollable">
+        <div class="scrollable-content">
+            <div class="nav-main-block">
+            </div>
+            <div class="cart-tips" ng-show="empty == true">
+                购物袋还是空的，去选几件中意的商品吧
+            </div>
+            
+            <div class="list-group" ng-show="empty != true">
+				<div ng-repeat="good in products" ng-init="parentIndex=$index">
+
+					<div class="list-group-item media border-bottom-0 product-item product-cart">	
+						<div class="product-box">
+							<div ng-show="good.error!='库存不足'" class="pull-left check-area" ng-click="checked(good,parentIndex,$index);">
+								<div class="checkbox {{(good.checked && good.error!='库存不足')? 'checked':''}}">
+								</div>
+							</div>
+							
+							<div style="line-height: 5em;text-align: center;color: #f75757;" ng-show="good.error=='库存不足'"
+							class="pull-left check-area"
+							ng-click="deleteItem(good,parentIndex,$index);">
+								<i class="fa fa-trash" style="font-size: 1.8em;"></i>
+							</div>
+							
+							<div class="media-body product-body">
+								<div class="product-area">
+									<div class="pull-left">
+										<a href="#/product/{{good.id}}/1">
+											<img alt="" src="{{good.img}}" class="product-image" /></a>
+									</div>
+									<div class="media-body product-instruction">
+										<a class="product-name product-name-line" href="#/product/{{good.id}}/1">
+											{{good.name}}
+										</a>
+										<div class="product-instruction-bottom">
+											<div class="cart-item-price">
+												{{good.ldPrice| currency:'￥'}}
+											</div>
+											<div class="modify-area order-num-right">
+												<div class="input-group">
+													<div class="input-group-addon num-addon addon-minus {{good.num <= 1 ? 'disabled':''}}"
+														ng-click="reduceNum($index);">
+													</div>
+													<input ng-model="good.quantity" class="form-control input-num" type="text"
+														ng-blur="validNum($index);">
+													<div class="input-group-addon num-addon" ng-click="addNum($index);">
+													</div>
+												</div>
+											</div>
+										</div>
+										
+										<div class="clear"></div>
+										<div><span ng-if="good.error" style="background: #f75757;
+color: #fff;
+font-size: .6em;
+padding: .2em .4em;">{{good.error}}</span></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+            <div class="nav-bottom-block">
+            </div>
+
+            <div class="nav-bottom-block">
+            </div>
+        </div>
+    </div>
+    <div ng-show="empty != true">
+        <div class="nav-bottom-background">
+        </div>
+        <div class="nav-bottom">
+			<div style="  border-top: 1px solid #eee;">
+				<span class="col-xs-2 text-left" style="padding-left: 10px;" ng-click="checkAll()">
+				
+					<div class="checkbox checkboxTotal {{isAllChecked()? 'checked':''}}" style="{{editMode?'':'margin-top: 20px;'}}">
+					</div>
+					<div class="clear"></div>
+					<span ng-show="editMode">全选</span>                            
+				</span>
+				
+				<span class="col-xs-6" ng-hide="editMode">
+					<div>合计：<span class="cash">{{cartInfo.total | currency:""}}</span></div>
+					<div class="clear"></div>
+					<div style="font-size:.5em;">
+						总额：￥{{cartInfo.oldTotal | currency:""}} 
+					</div>
+					<div style="font-size:.5em;">
+						领队优惠：￥{{cartInfo.js | currency:""}}
+					</div>
+				</span>
+				
+				<span class="col-xs-6" ng-show="editMode">
+					&nbsp;
+				</span>
+				
+				<span class="col-xs-4">
+					<button type="button" class="btn btn-default btn-confirm btn-go" ng-click="go()"
+                        ng-hide="editMode == true">
+                        去结算({{totalNum()}}) </button>
+                    <button type="button" class="btn btn-default btn-confirm btn-go btn-go-less" ng-show="editMode == true"
+                        ng-click="remove()">
+                        删除</button>
+				
+				</span>
+				
+				<div class="clear"></div>
+			</div>
+        </div>
+    </div>

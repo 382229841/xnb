@@ -1,0 +1,278 @@
+<style>
+	.list-products-item{
+		min-height: 100px;
+		width: 49%;
+		float:left;
+		background-color:#fff;
+		margin-bottom:10px;
+	}
+	.list-products{
+		min-height: 100px;
+		padding: 0 8px;
+	}
+	.list-products-item:nth-child(odd){
+		margin-right:2%;
+		
+	}
+	.products-item-image{
+		background-position: center 0;
+		background-repeat: no-repeat;
+		background-size: contain;
+	}
+	.list-show-product-brief-0{
+		color:#333;
+		font-size:.85em;
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-line-clamp: 2;
+		word-break: break-all;
+		-webkit-box-orient: vertical;
+	}
+	.products-item-title{
+		padding:0 .5em;
+		position:relative;
+	}
+	.products-item-price{
+		position: absolute;
+		bottom: 0em;
+		padding-top:.2em;
+		padding-bottom:.3em;
+		width: 90%;
+		background-color: #fff;
+	}
+	
+	.products-item-title hr {
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+	.price.promotePrice {
+		font-size: 1em;
+		color: #ec3f35;
+	}
+	.price.shopPrice {
+		font-size: .9em;
+		color: #999;
+	}
+	.price{
+		text-align:center;
+		line-height:1.3;
+	}
+	@media only screen and (min-width: 500px)
+    {
+        .price{
+			line-height:2;
+		}
+		
+		.products-item-price{
+			padding-bottom: 1em;
+			padding-top:.5em;
+		}
+    }
+
+
+	.btn-cancel{
+		background-image:none;
+		color:#fff;
+		top: 0em;
+		font-size: 1.1em;
+	}
+	@media only screen and (max-width: 350px)
+	{
+		.search-input{
+			width: 85%;
+		}
+	}
+	@media only screen and (max-width: 300px)
+	{
+		.search-input{
+			width: 80%;
+		}
+	}
+	@media only screen and (max-width: 250px)
+	{
+		.search-input{
+			width: 75%;
+		}
+	}
+	.hot-keyword{
+		background-color: #fff;
+		float: left;
+		display: inline-block;
+		padding: 6px 10px;
+		margin-left: 10px;
+		margin-top: 10px;
+		font-size:1.2em;
+		color:#666;
+	}
+	.search-result{
+		min-height: 100px;
+		position: absolute;
+		top: 50px;
+		z-index: 999;
+		width: 100%;
+		background-color: #fff;
+		padding: .5em .5em 1em .5em;
+		-webkit-transform: translateY(-100%);
+		transform: translateY(-100%);
+		-webkit-transition: all .2s ease-in-out;
+		transition: all .2s ease-in-out;
+	}
+	
+	.search-result.focus{
+		-webkit-transform: none;
+		transform: none;
+	}
+	
+	.search-result div{
+		text-align:center;
+		line-height:2.3em;
+		font-size: 1.1em;
+	}
+	
+	.search-result div .search-result-item{
+		border-bottom:1px solid #eee;
+	}
+	.search-result div .search-result-btn{
+		padding-top:.5em;
+	}
+	
+	.search-result div span{
+		display:inline-block;
+		background:#f7f7f7;
+		width: 50%;
+	}
+	.fa-search:before {
+		content: "\f002";
+	}
+	.fa-search {
+		position: absolute;
+		top: 22px;
+		right: 24px;
+		color: #999;
+		z-index: 9999999999;
+	}
+
+</style>
+<div ng-controller="searchPanelController">
+    <!-- Navbars -->
+    <div class="navbar navbar-app nav-main">
+        <div class="navbar-brand navbar-brand-search" style="text-align:right;">
+            <input type="text" class="search-input" placeholder="商品名" 
+				ng-model="searchKeyword" 
+				ng-keyup="searchKeyup($event);"
+				ng-click="searchFocus();"
+				ng-blur="searchBlur();"
+				
+				id="searchInput"
+				/>
+			<i class="fa fa-search" ng-click="queryGoods(searchKeyword,1);"></i>
+        </div>
+        <div class="btn-group pull-left" ng-click="cancelSearch();" ng-show="isQuery || isFocus">
+            <div class="btn btn-navbar sidebar-toggle">
+                <div class="btn-left btn-cancel">
+					取消
+                </div>
+            </div>
+        </div>
+		
+		<div class="btn-group pull-left" ng-click="back()" ng-show="!isQuery && !isFocus">
+            <div class="btn btn-navbar sidebar-toggle">
+                <div class="btn-to-back">
+                </div>
+            </div>
+        </div>
+		
+    </div>
+
+    <div class="scrollable product-list product-list-query">
+    	
+        <div class="scrollable-content background-gray" style="padding-bottom:1em;" ng-click="hideSearchDropdown();">  
+			<div class="nav-main-block"></div>
+			
+            <span ng-show="!isQuery"
+            	class="hot-keyword" 
+            	ng-repeat="word in hotKeywords" 
+            	ng-click="saveSearchKeyword(word);">{{word}}</span>
+            <div ng-show="isQuery">
+				<div id="queryProductList">
+
+					<div id="queryProducts" style="margin-top: 15px;">
+						<div class="list-products">
+							<div class="list-products-item" ng-repeat="p in queryProducts" ng-click="goProduct(p.id);">
+								<div class="products-item-image" style="background-image:url({{p.img}})"></div>
+
+								<div class="products-item-title">
+									<hr/>
+									<div class="products-item-name">
+										<span class="list-show-product-brief-0">
+											{{p.name}}
+										</span>
+									</div>
+
+									<div class="products-item-price">
+										<div class="shopPrice price">￥{{p.promotePrice}}</div>								
+										<div class="promotePrice price">￥{{p.ldPrice || p.promotePrice}}</div>								
+									</div>
+
+
+								</div>
+
+
+
+
+
+								<span style="display:none;" ng-if="$last">
+									{{drawQueryPanel();}}
+								</span>
+							</div>
+
+							<div class="clear"></div>
+
+						</div>
+					</div> 
+
+
+					<div class="load-bar" ng-hide="(queryPageNum == null || queryPageNum == queryPageCount || queryProducts.length==0)">
+						<div class="pull-loading query">
+							上拉加载
+						</div>
+						<canvas id="queryLoadCanvas" width="70px" height="70px;"></canvas>
+					</div>
+					<div class="complete-bar-words" ng-show="(queryPageNum != null && queryPageNum == queryPageCount)">
+						已经到底了哦~
+					</div>
+					<div class="complete-bar-words" ng-show="(queryProducts.length==0)">
+						没有查询到您要的商品~
+					</div>
+				</div>
+
+            </div>
+			
+        </div>
+		
+		<div class="search-result">
+			<div ng-show="isLocalKey">
+				<div 
+					class="search-result-item" 
+					ng-repeat="item in searchLocalItems track by $index"
+					ng-click="queryGoods(item.value,1);"
+					>{{item.value}}</div>				
+				
+				<div class="search-result-btn"><span ng-click="removeSearchKeyword();">清除历史记录</span></div>
+			</div>
+			
+			<div ng-hide="isLocalKey">
+				<div 
+					class="search-result-item" 
+					ng-repeat="item in searchItems track by $index" 
+					ng-click="saveSearchKeyword(item);" style="{{$last?'border:0':''}}">{{item}}</div>	
+				
+			</div>
+		
+		</div>
+		
+		
+	</div>
+	
+	<div class="clear"></div>
+</div>

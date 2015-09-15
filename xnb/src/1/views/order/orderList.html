@@ -1,0 +1,107 @@
+<style>
+.span-btn-pay{
+	color: #fff !important;
+	background-color: #f75757;
+	padding: .5em .8em;
+	border-radius: 5px;
+	min-width: 5em;
+	display: inline-block;
+	text-align: center;
+}
+</style>
+<div ng-controller="orderListController">
+    <!-- Navbars -->
+    <div class="navbar navbar-app nav-main">
+        <div class="navbar-brand navbar-brand-center">
+            我的订单
+        </div>
+        <div class="btn-group pull-left" ng-click="back()">
+            <div class="btn btn-navbar sidebar-toggle">
+                <div class="btn-to-back">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="scrollable">
+        <div class="scrollable-content background-gray">
+            <div class="nav-main-block">
+            </div>
+
+            <div ng-if="!orders ">
+                <div style="text-align:center">
+                    <div style="padding:1em 0;">                        
+                        <img src="/image/buyFree.png" style="zoom:0.8;"/>
+                    </div>
+                    <div style="padding:1em 0;font-size:1.1em;">
+                        没有取货订单，去选几件中意的产品       
+                    </div>
+                    
+                </div>
+
+                <button class="btn btn-default btn-confirm btn-OK" ng-click="go()">
+                    去逛逛</button>
+            </div>
+            <div ng-repeat="order in orders" class="order-list" ng-if="orders">
+             
+                <div class="pay-area" style="padding-top:0;padding-bottom:.8em;">
+                    <div class="list-head normal-font">
+                        <div style="color:#f75757;font-size: 1.1em;">
+                            {{getOrderStatus(order.status)}}
+                        </div>
+                    </div>
+					
+                    <a href="#/orderDetail/{{order.orderId}}/{{mobile}}">   
+						<div class="list-group">
+							<div class="list-group-item media border-bottom-0 product-item" ng-repeat="product in order.goodsList">
+								<div class="product-body">
+									<div class="pull-left">
+										<img alt="" src="{{product.img}}" class="product-image" />
+									</div>
+									<div class="media-body product-instruction product-detail order-product-detail">
+										<div class="product-name">
+											{{product.name}}
+										</div>
+										<div class="product-instruction-bottom">
+											<div class="order-num">
+												{{product.buyPrice| currency:'￥'}}<br />
+												<span class="product-num">×{{product.quantity}}</span>
+											</div>
+											<div class="subtotal-right">
+												{{product.buyPrice * product.quantity | currency:'￥'}}</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+                    </a>
+                    <div style="background-color: #fff;padding: .8em .6em;">
+                        <span class="col-xs-8">实付:
+							<span class="order-amount-total cash">{{order.discountPrice | currency:''}}</span>						
+							<span style="color:#999;font-size:.9em;padding-left:.3em;">共<span style="color:#999;">{{order.goodsNum}}</span>件</span>
+						</span>
+						<span class="col-xs-4 text-right">
+							<span  
+								ng-if="order.status==1"
+								class="span-btn-pay"								
+								ng-click="pay(order.orderNum,order.discountPrice,order.goodsNum,order.orderId)">
+							付款</span>
+							
+							<span  
+								ng-if="order.status==2"
+								class="span-btn-pay"								
+								ng-click="takeOverOrder(order.orderId,$index)">
+							确认收货</span>
+							
+						</span>
+						<div class="clear"></div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+        </div>
+    </div>
+</div>
