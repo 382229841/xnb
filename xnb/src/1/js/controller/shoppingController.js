@@ -1657,7 +1657,15 @@ app.controller('myIncomeController', function ($rootScope, $scope, httpRequest, 
 		}
         $location.path("/myProfile");
     }
-
+	$scope.services=[{checked:true},{checked:false},{checked:true}];
+	$scope.services2=[{checked:true},{checked:false},{checked:true},{checked:true},{checked:true},{checked:true},{checked:true}];
+	$scope.chooseService=function(s){
+		s.checked=s.checked?false:true;
+		
+	};
+	
+	
+	
 	$scope.incomeList1=[];//未返现
 	$scope.incomeList2=[];//申请中
 	$scope.incomeList3=[];//已提现

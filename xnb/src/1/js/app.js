@@ -34,6 +34,8 @@ app.config(function ($routeProvider, $locationProvider,$controllerProvider,$comp
 	}
 
     $routeProvider
+		.when('/washcar', { templateUrl: "views/washcar.html?"+preventCache })
+		
         .when('/products', { templateUrl: "views/goods/products.html?"+preventCache })
         .when('/products/:code', { templateUrl: "views/goods/products.html?"+preventCache })
 		.when('/productsSearch', { templateUrl: "views/goods/searchPanel.html?"+preventCache })
@@ -87,7 +89,7 @@ app.config(function ($routeProvider, $locationProvider,$controllerProvider,$comp
 		.when('/myWish', { templateUrl: "views/user/myWish.html?"+preventCache })
 		
 		.otherwise({
-            redirectTo: '/products'
+            redirectTo: '/washcar'
         });
 });
 
@@ -110,7 +112,7 @@ app.run( function($rootScope, $location) {
 			if($location.path()!=='/register' && $location.path()!=='/forgot'){
 				$rootScope.isRootLogin=false;
 				$rootScope.$emit("CtrlUserModule", $rootScope.isRootLogin);
-			}			
+			}
 		}else{
 			$rootScope.tokenInfo=tokenInfo;
 		}
