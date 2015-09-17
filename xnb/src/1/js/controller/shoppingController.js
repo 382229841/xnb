@@ -1598,7 +1598,7 @@ app.controller('errorController', function ($rootScope, $scope, httpRequest,data
     }
 });
 
-app.controller('myIncomeController', function ($rootScope, $scope, httpRequest, dataStringify, analytics, $location, $window,$routeParams) {
+app.controller('washCarController', function ($rootScope, $scope, httpRequest, dataStringify, analytics, $location, $window,$routeParams) {
     $scope.step=1;
 	
 	$scope.withDraw=function(t){
@@ -1655,7 +1655,7 @@ app.controller('myIncomeController', function ($rootScope, $scope, httpRequest, 
 			$scope.step=1;
 			return;
 		}
-        $location.path("/myProfile");
+        //$location.path("/myProfile");
     }
 	$scope.services=[{checked:true},{checked:false},{checked:true}];
 	$scope.services2=[{checked:true},{checked:false},{checked:true},{checked:true},{checked:true},{checked:true},{checked:true}];
@@ -1664,7 +1664,10 @@ app.controller('myIncomeController', function ($rootScope, $scope, httpRequest, 
 		
 	};
 	
-	
+	$scope.next=function(){
+		$location.path("/order");
+		
+	};
 	
 	$scope.incomeList1=[];//未返现
 	$scope.incomeList2=[];//申请中
@@ -1696,6 +1699,38 @@ app.controller('myIncomeController', function ($rootScope, $scope, httpRequest, 
     });
 	
 });
+
+
+app.controller('orderController', function ($rootScope, $scope, httpRequest, dataStringify, analytics, $location, $window,$routeParams) {
+	$scope.back = function () {
+		
+        $location.path("/washcar");
+    }
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.controller('myWishController', function ($rootScope, $scope, httpRequest, dataStringify, analytics, $location, $window,$routeParams) {
     $scope.step=1;

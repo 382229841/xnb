@@ -35,6 +35,7 @@ app.config(function ($routeProvider, $locationProvider,$controllerProvider,$comp
 
     $routeProvider
 		.when('/washcar', { templateUrl: "views/washcar.html?"+preventCache })
+		.when('/order', { templateUrl: "views/order.html?"+preventCache })
 		
         .when('/products', { templateUrl: "views/goods/products.html?"+preventCache })
         .when('/products/:code', { templateUrl: "views/goods/products.html?"+preventCache })
