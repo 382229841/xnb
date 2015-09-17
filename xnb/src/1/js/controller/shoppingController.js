@@ -1706,6 +1706,17 @@ app.controller('orderController', function ($rootScope, $scope, httpRequest, dat
 		
         $location.path("/washcar");
     }
+	$scope.services=[{checked:true,name:"外观水腊温柔洗",price:29}];
+	$scope.chooseService=function(){
+		var isChecked=$scope.services[0].checked?false:true;
+		if(isChecked){
+			$scope.services=[{checked:true,name:"外观水腊温柔洗+内饰清洗",price:29}];
+		}else{
+			$scope.services=[{checked:false,name:"外观水腊温柔洗",price:25}];
+		}
+		
+		
+	};
 
 });
 
